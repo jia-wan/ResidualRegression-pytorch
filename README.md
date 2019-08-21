@@ -11,7 +11,8 @@ This is the official code of the CVPR 2019 PAPER.
 	* python2.7
 	* pytorch 0.4.1 
 2. Testing:
-	* download our [pretrained models]()
+	* download [test set](https://drive.google.com/open?id=11WJwj5EDxAgkZwJV47gmiqm3bL4hVNLr)
+	* download [pretrained models](https://drive.google.com/drive/folders/1CBGA47LxGM1UToWcbn3oVusk0iEbM3cZ)
 	* run `python test.py`
 
 ## Citing
