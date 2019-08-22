@@ -18,7 +18,6 @@ def save_checkpoint(state, is_best,task_id, filename='checkpoint.pth.tar'):
         shutil.copyfile('./saved_models/'+task_id+filename, './saved_models/'+task_id+'model_best.pth.tar')            
 
 def tv_loss(y):
-    #loss = torch.sum(torch.abs(y[:-1, :, :, :] - y[1:, :, :, :])) + torch.sum(torch.abs(y[:, :-1, :, :] - y[:, 1:, :, :]))
     loss = torch.sum((y[:-1, :, :, :] - y[1:, :, :, :])**2) + torch.sum((y[:, :-1, :, :] - y[:, 1:, :, :])**2)
     return loss
 

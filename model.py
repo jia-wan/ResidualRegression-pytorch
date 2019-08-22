@@ -50,7 +50,6 @@ class Residual(nn.Module):
         x2 = self.r2(pairs)
         x3 = self.r3(pairs)
         pairs = self.residual_predict(torch.cat((x1,x2,x3),1))
-        #pairs = self.residual_predict(pairs)
         # calc residual based density estimation
         residual_predictions = pairs + support_gt.squeeze(0).unsqueeze(1)
         # merge residual mals
@@ -61,7 +60,6 @@ class Residual(nn.Module):
         x2 = self.rm2(residual_predictions.view(1,n,h,w))
         x3 = self.rm3(residual_predictions.view(1,n,h,w))
         final_residual_prediction = self.residual_merge(torch.cat((x1,x2,x3),1))
-        #final_residual_prediction = self.residual_merge(residual_predictions.view(1,n,h,w))
         # merge residual and appearance maps
         x1 = self.ram1(torch.cat((final_residual_prediction, app_prediction),1))
         x2 = self.ram2(torch.cat((final_residual_prediction, app_prediction),1))
@@ -86,16 +84,8 @@ class CSRNet(nn.Module):
         self.seen = 0
         self.frontend_feat = [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512]
         self.backend_feat  = [512, 512, 512,256,128,64]
-        #self.backend_feat  = ['T256', 512, 512, 'T256', 256, 256, 'T128', 128,64]
-        #self.backend_feat  = ['T128', 256, 512, 'T128', 256, 256, 'T128', 128,64]
-        #self.backend_feat  = ['T256', 256, 256, 'T128', 128, 128, 'T64', 64,64]
-        #self.backend_feat  = ['T256', 256, 'T128',128, 'T64',64]
-        #self.backend_feat  = ['T128', 128, 128, 'T32',32, 32, 'T8',8,8]
-        #self.backend_feat  = [512, 512, 512,256,128,64]
         self.frontend = make_layers(self.frontend_feat)
         self.backend = make_layers(self.backend_feat,in_channels = 512,norm=norm,dilation = True, dropout=dropout)
-        #self.output_layer = nn.Sequential(nn.Conv2d(64, 1, kernel_size=1))
-        #self.output_layer = nn.Sequential(nn.Conv2d(64, 1, kernel_size=1), nn.ReLU(inplace=True))
         self.output_layer = nn.Conv2d(64, 1, kernel_size=1)
         self._initialize_weights()
         if not load_weights:
@@ -107,8 +97,7 @@ class CSRNet(nn.Module):
             self.frontend.load_state_dict(fs)
         else:
             print("Don't pre-train on ImageNet")
-            #for i in range(len(self.frontend.state_dict().items())):
-            #    self.frontend.state_dict().items()[i][1].data[:] = mod.state_dict().items()[i][1].data[:]
+
     def forward(self,x):
         x = self.frontend(x)
         x = self.backend(x)
